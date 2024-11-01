@@ -1,15 +1,30 @@
-const stalkSecond = document.querySelector('.stalk-second')
-const stalkMinute = document.querySelector('.stalk-minute')
-const stalkHour = document.querySelector('.stalk-hour')
+let clock = document.querySelector(".clock"),
+  hr = document.querySelector(".hr"),
+  min = document.querySelector(".min"),
+  sec = document.querySelector(".sec");
 
-setInterval(function() {
-    const date = new Date()
+let num = () => {
+  for (let i = 0; i < 12; i++) {
+    let numClock = document.createElement("div");
+    numClock.classList.add("num");
+    clock.appendChild(numClock);
+    numClock.innerText = `${i + 1}`;
 
-    const second = date.getSeconds() * 6
-    const minute = date.getMinutes() * 6
-    const hour = date.getHours() * 30 + minute / 12
+    numClock.style = `transform: rotate(calc(${i + 1} * (360deg / 12)))`;
+  }
+};
 
-    stalkSecond.style.transform = "rotate(" + second + "deg)"
-    stalkMinute.style.transform = "rotate(" + minute + "deg)"
-    stalkHour.style.transform = "rotate(" + hour + "deg)"
-})
+const updateTime = () => {
+  const deg = 6;
+  let date = new Date();
+  let hh = (date.getHours() % 12) * 30; // Considera solo le ore nell'intervallo 1-12
+  let mm = date.getMinutes() * deg;
+  let ss = date.getSeconds() * deg;
+
+  hr.style.transform = `rotateZ(${hh + mm / 12}deg)`; // Aggiungi una frazione dell'angolo dei minuti
+  min.style.transform = `rotateZ(${mm}deg)`;
+  sec.style.transform = `rotateZ(${ss}deg)`;
+};
+setInterval(updateTime, 1000);
+updateTime();
+num();
