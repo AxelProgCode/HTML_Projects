@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vigenère Code</title>
+    <style>
+        /* Stili generali per la pagina */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #e7f1ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            perspective: 1000px; /* Per effetti 3D */
+        }
+
+        /* Contenitore principale */
+        .container {
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 15px 15px 30px #d1d1d1,
+                        -15px -15px 30px #ffffff; /* Ombre per effetto 3D */
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            transform: translateZ(0); /* Attiva il contesto 3D */
+        }
+
+        /* Stile per il titolo */
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Stili per i campi di input e textarea */
+        label {
+            font-size: 16px;
+            color: #555;
+            margin-top: 10px;
+            display: block;
+            text-align: left;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            transition: all 0.3s;
+            font-size: 16px;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            box-shadow: 6px 6px 12px #d1d1d1,
+                        -6px -6px 12px #ffffff; /* Ombre interne per effetto 3D */
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Ombra al focus */
+        }
+
+        /* Stile per il pulsante */
+        button {
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: linear-gradient(145deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+            box-shadow: 6px 6px 12px #d1d1d1,
+                        -6px -6px 12px #ffffff; /* Ombre per effetto 3D */
+        }
+
+        button:hover {
+            background: linear-gradient(145deg, #45a049, #4CAF50);
+            transform: translateY(-2px); /* Effetto sollevato */
+            box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2); /* Ombra al hover */
+        }
+
+        /* Area di output */
+        .output {
+            margin-top: 20px;
+            padding: 12px;
+            background: linear-gradient(145deg, #f9f9f9, #f1f1f1);
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            color: #333;
+            font-weight: bold;
+            box-shadow: 6px 6px 12px #d1d1d1,
+                        -6px -6px 12px #ffffff; /* Ombre per effetto 3D */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cifratura Vigenère</h1>
+        <label for="message">Messaggio in chiaro:</label>
+        <textarea id="message" rows="4" placeholder="Inserisci il testo da cifrare..."></textarea>
+        <label for="key">Chiave:</label>
+        <input type="text" id="key" placeholder="Inserisci la parola chiave...">
+        <button onclick="vigenereEncrypt()">Cifra Messaggio</button>
+        <div class="output" id="output">Testo cifrato apparirà qui</div>
+    </div>
+    <script>
+        function vigenereEncrypt() {
+            const message = document.getElementById("message").value.toUpperCase();
+            const key = document.getElementById("key").value.toUpperCase();
+            let cipherText = "";
+
+            for (let i = 0, j = 0; i < message.length; i++) {
+                const letter = message[i];
+
+                if (letter >= 'A' && letter <= 'Z') {
+                    const letterCode = (letter.charCodeAt(0) - 65 + key[j % key.length].charCodeAt(0) - 65) % 26 + 65;
+                    cipherText += String.fromCharCode(letterCode);
+                    j++;
+                } else {
+                    cipherText += letter;
+                }
+            }
+
+            document.getElementById("output").innerText = cipherText;
+        }
+    </script>
+</body>
+</html>

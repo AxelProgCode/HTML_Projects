@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="Style.css">
+	<title>Cesar Code</title>
+</head>
+<body>
+	<h1>Cesar Code</h1>
+	<p>Inserisci qui la tua frase: <input type="text" id="frase"></p>
+	<p>Inserisci l'indice di codifica (1/25): <input type="number" id="indice"></p>
+	<button onclick="codifica()">Codifica</button>
+	<button onclick="decodifica()">Decodifica</button>
+	<p>Risultato: <span id="risultato"></span></p>
+	<script>
+		function codifica() {
+			var testoIngresso = document.getElementById("frase").value;
+			var indice = parseInt(document.getElementById("indice").value);
+			var testoCodificato = "";
+			for (var i = 0; i < testoIngresso.length; i++) {
+				var carattere = testoIngresso.charCodeAt(i);
+				if (carattere >= 65 && carattere <= 90) {
+					carattere = (((carattere - 65) + indice) % 26) + 65;
+				} else if (carattere >= 97 && carattere <= 122) {
+					carattere = (((carattere - 97) + indice) % 26) + 97;
+				}
+				testoCodificato += String.fromCharCode(carattere);
+			}
+			document.getElementById("risultato").innerHTML = testoCodificato;
+		}
+		function decodifica() {
+			var testoIngresso = document.getElementById("frase").value;
+			var indice = parseInt(document.getElementById("indice").value);
+			var testoDecodificato = "";
+			for (var i = 0; i < testoIngresso.length; i++) {
+				var carattere = testoIngresso.charCodeAt(i);
+				if (carattere >= 65 && carattere <= 90) {
+					carattere = (((carattere - 65) - indice + 26) % 26) + 65;
+				} else if (carattere >= 97 && carattere <= 122) {
+					carattere = (((carattere - 97) - indice + 26) % 26) + 97;
+				}
+				testoDecodificato += String.fromCharCode(carattere);
+			}
+			document.getElementById("risultato").innerHTML = testoDecodificato;
+		}
+	</script>
+</body>
+</html>
