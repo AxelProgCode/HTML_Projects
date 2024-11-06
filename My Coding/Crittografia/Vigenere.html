@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cifratura Vigenère</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+		body {
+			font-family: 'Poppins', sans-serif;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			background: linear-gradient(135deg, #6dd5ed, #2193b0);
+			margin: 0;
+			color: #333;
+		}
+		.container {
+			background-color: #ffffff;
+			padding: 30px 25px;
+			border-radius: 12px;
+			box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+			text-align: center;
+			max-width: 400px;
+			width: 100%;
+			transition: box-shadow 0.3s;
+		}
+		.container:hover {
+			box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+		}
+		h1 {
+			font-weight: 600;
+			color: #333;
+		}
+		p {
+			margin-top: 15px;
+			font-size: 18px;
+			color: #555;
+		}
+		input[type="text"], input[type="number"] {
+			padding: 12px;
+			font-size: 16px;
+			border-radius: 8px;
+			border: 1px solid #ddd;
+			width: 90%;
+			background-color: #f9f9f9;
+			margin: 8px 0;
+			outline: none;
+			transition: border-color 0.3s;
+		}
+		input[type="text"]:focus, input[type="number"]:focus {
+			border-color: #4CAF50;
+		}
+		button {
+			background: linear-gradient(135deg, #4CAF50, #388E3C);
+			border: none;
+			border-radius: 8px;
+			color: white;
+			font-size: 18px;
+			font-weight: bold;
+			padding: 12px 20px;
+			margin: 10px 5px;
+			cursor: pointer;
+			width: 45%;
+			transition: background 0.3s, transform 0.2s;
+		}
+		button:hover {
+			background: linear-gradient(135deg, #45a049, #2e7d32);
+			transform: scale(1.05);
+		}
+		#risultato {
+			font-size: 20px;
+			font-weight: bold;
+			color: #0047ab;
+			margin-top: 20px;
+		}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Cifratura Vigenère</h1>
+    <p>Inserisci qui la tua frase:</p>
+    <input type="text" id="text" placeholder="Testo da cifrare/decifrare">
+    <p>Inserisci la chiave di codifica (1-4 caratteri):</p>
+    <input type="text" id="key" placeholder="Chiave di codifica">
+    <button onclick="cifra()">Cifra</button>
+    <button onclick="decifra()">Decifra</button>
+    <p>Risultato:</p>
+    <span id="risultato"></span>
+  </div>
+
+  <script>
+    function cifra() {
+      const text = document.getElementById("text").value.toUpperCase();
+      const key = document.getElementById("key").value.toUpperCase();
+      document.getElementById("risultato").innerText = vigenere(text, key, 'encrypt');
+    }
+
+    function decifra() {
+      const text = document.getElementById("text").value.toUpperCase();
+      const key = document.getElementById("key").value.toUpperCase();
+      document.getElementById("risultato").innerText = vigenere(text, key, 'decrypt');
+    }
+
+    function vigenere(text, key, mode) {
+      let risultato = '';
+      for (let i = 0, j = 0; i < text.length; i++) {
+        const char = text[i];
+        
+        if (char >= 'A' && char <= 'Z') {
+          const textChar = text.charCodeAt(i) - 65;
+          const keyChar = key.charCodeAt(j % key.length) - 65;
+          const shift = mode === 'encrypt' 
+            ? (textChar + keyChar) % 26 
+            : (textChar - keyChar + 26) % 26;
+          risultato += String.fromCharCode(shift + 65);
+          j++; // Avanza nella chiave solo se la lettera è cifrata/decriptata
+        } else {
+          risultato += char;
+        }
+      }
+      return risultato;
+    }
+  </script>
+</body>
+</html>

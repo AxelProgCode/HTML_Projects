@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cifratura Scitala</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    body {
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #6dd5ed, #2193b0);
+      margin: 0;
+      color: #333;
+    }
+    .container {
+      background-color: #ffffff;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+      transition: box-shadow 0.3s;
+    }
+    .container:hover {
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+    }
+    h1 {
+      font-weight: 600;
+      color: #333;
+    }
+    p {
+      margin-top: 15px;
+      font-size: 18px;
+      color: #555;
+    }
+    input[type="text"], input[type="number"] {
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      width: 90%;
+      background-color: #f9f9f9;
+      margin: 8px 0;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    input[type="text"]:focus, input[type="number"]:focus {
+      border-color: #4CAF50;
+    }
+    button {
+      background: linear-gradient(135deg, #4CAF50, #388E3C);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 12px 20px;
+      margin: 10px 5px;
+      cursor: pointer;
+      width: 45%;
+      transition: background 0.3s, transform 0.2s;
+    }
+    button:hover {
+      background: linear-gradient(135deg, #45a049, #2e7d32);
+      transform: scale(1.05);
+    }
+    #risultato {
+      font-size: 20px;
+      font-weight: bold;
+      color: #0047ab;
+      margin-top: 20px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Cifratura Scitala</h1>
+    <p>Inserisci qui la tua frase:</p>
+    <input type="text" id="text" placeholder="Testo da cifrare/decifrare">
+    <p>Inserisci il numero di righe (1-15):</p>
+    <input type="number" id="rows" min="1" max="15" placeholder="Numero di righe">
+    <button onclick="cifra()">Cifra</button>
+    <button onclick="decifra()">Decifra</button>
+    <p>Risultato:</p>
+    <span id="risultato"></span>
+  </div>
+
+  <script>
+    function cifra() {
+        const text = document.getElementById("text").value.replace(/\s+/g, '').toUpperCase();
+        const rows = parseInt(document.getElementById("rows").value);
+        if (isNaN(rows) || rows < 1 || rows > 15) {
+            document.getElementById("risultato").innerHTML = "Inserisci un numero di righe valido (1-15)";
+            return;
+        }
+        document.getElementById("risultato").innerText = scitala(text, rows, 'encrypt');
+    }
+
+    function decifra() {
+        const text = document.getElementById("text").value.replace(/\s+/g, '').toUpperCase();
+        const rows = parseInt(document.getElementById("rows").value);
+        if (isNaN(rows) || rows < 1 || rows > 15) {
+            document.getElementById("risultato").innerHTML = "Inserisci un numero di righe valido (1-15)";
+            return;
+        }
+        document.getElementById("risultato").innerText = scitala(text, rows, 'decrypt');
+    }
+
+    function scitala(text, rows, mode) {
+        const columns = Math.ceil(text.length / rows);
+        let risultato = '';
+        if (mode === 'encrypt') {
+          for (let col = 0; col < columns; col++) {
+            for (let row = 0; row < rows; row++) {
+              const index = row * columns + col;
+              risultato += index < text.length ? text[index] : '';
+            }
+          }
+        } else {
+          for (let row = 0; row < rows; row++) {
+            for (let col = 0; col < columns; col++) {
+              const index = col * rows + row;
+              risultato += index < text.length ? text[index] : '';
+            }
+          }
+        }
+        return risultato;
+    }
+  </script>
+</body>
+</html>
