@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Cifratura RSA</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+		body {
+			font-family: 'Poppins', sans-serif;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			background: linear-gradient(135deg, #6dd5ed, #2193b0);
+			margin: 0;
+			color: #333;
+		}
+		.container {
+			background-color: white;
+			padding: 30px 25px;
+			border-radius: 20px;
+			text-align: center;
+			max-width: 400px;
+			width: 100%;
+			box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+		}
+		h1 {
+			font-weight: 600;
+			color: #333;
+		}
+		input[type="text"] {
+			padding: 12px;
+			font-size: 16px;
+			border-radius: 8px;
+			border: 1px solid #ddd;
+			width: 90%;
+			background-color: #f9f9f9;
+			margin: 8px 0;
+			outline: none;
+		}
+		button {
+			background: linear-gradient(135deg, #4CAF50, #388E3C);
+			border: none;
+			border-radius: 8px;
+			color: white;
+			font-size: 18px;
+			font-weight: bold;
+			padding: 12px 20px;
+			margin: 10px 5px;
+			cursor: pointer;
+			width: 45%;
+			transition: background 0.3s, transform 0.2s;
+		}
+		button:hover {
+			background: linear-gradient(135deg, #45a049, #2e7d32);
+			transform: scale(1.05);
+		}
+		#risultato {
+			font-size: 20px;
+			font-weight: bold;
+			color: #0047ab;
+			margin-top: 20px;
+			display: block;
+		}
+        .footer {
+			position: fixed;
+			bottom: 20px;
+			background-color: rgba(0, 0, 0, 0.7);
+			padding: 0px 25px 0px 25px;
+			border-radius: 20px;
+		}
+		.footer a {
+			color: #ffeb3b;
+			text-decoration: none;
+			font-weight: bold;
+		}
+		.footer p {
+			color: white;
+			text-decoration: none;
+			text-align: center;
+			font-weight: bold;
+		}
+		.footer a:hover {
+			text-decoration: underline;
+		}
+	</style>
+	<!-- Include JSEncrypt -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.0.0/jsencrypt.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<h1>Cifratura RSA</h1>
+		<input type="text" id="text" placeholder="Testo da cifrare">
+		<button onclick="generaChiavi()">Genera Chiavi</button>
+		<button onclick="cifra()">Cifra</button>
+		<button onclick="decifra()">Decifra</button>
+		<p>Risultato:</p>
+		<span id="risultato"></span>
+	</div>
+    <div class="footer">
+		<p>Approfondisci:<br>
+			IT: <a href="https://it.wikipedia.org/wiki/RSA_(crittografia)" target="_blank">RSA</a>
+			/ EN: <a href="https://en.wikipedia.org/wiki/RSA_(cryptosystem)" target="_blank">RSA</a>
+		</p>
+	</div>
+
+	<script>
+		let chiavePubblica = '';
+		let chiavePrivata = '';
+
+		function generaChiavi() {
+			const crypt = new JSEncrypt({default_key_size: 2048});
+			chiavePubblica = crypt.getPublicKey();
+			chiavePrivata = crypt.getPrivateKey();
+			alert("Chiavi generate con successo!");
+		}
+
+		function cifra() {
+			const text = document.getElementById("text").value;
+			if (!chiavePubblica) {
+				alert("Genera prima le chiavi!");
+				return;
+			}
+			const encrypt = new JSEncrypt();
+			encrypt.setPublicKey(chiavePubblica);
+			const encrypted = encrypt.encrypt(text);
+			document.getElementById("risultato").innerText = encrypted || "Errore nella cifratura!";
+		}
+
+		function decifra() {
+			const text = document.getElementById("text").value;
+			if (!chiavePrivata) {
+				alert("Genera prima le chiavi!");
+				return;
+			}
+			const decrypt = new JSEncrypt();
+			decrypt.setPrivateKey(chiavePrivata);
+			const decrypted = decrypt.decrypt(text);
+			document.getElementById("risultato").innerText = decrypted || "Errore nella decifratura!";
+		}
+	</script>
+</body>
+</html>

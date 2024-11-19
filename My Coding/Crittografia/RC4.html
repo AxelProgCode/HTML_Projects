@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Cifratura RC4</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+		body {
+			font-family: 'Poppins', sans-serif;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			background: linear-gradient(135deg, #6dd5ed, #2193b0);
+			margin: 0;
+			color: #333;
+		}
+		.container {
+			background-color: white;
+			padding: 30px 25px;
+			border-radius: 20px;
+			text-align: center;
+			max-width: 400px;
+			width: 100%;
+		}
+		h1 {
+			font-weight: 600;
+			color: #333;
+		}
+		p {
+			margin-top: 15px;
+			font-size: 18px;
+			color: #555;
+		}
+		input[type="text"] {
+			padding: 12px;
+			font-size: 16px;
+			border-radius: 8px;
+			border: 1px solid #ddd;
+			width: 90%;
+			background-color: #f9f9f9;
+			margin: 8px 0;
+			outline: none;
+			transition: border-color 0.3s;
+		}
+		input[type="text"]:focus {
+			border-color: #4CAF50;
+		}
+		button {
+			background: linear-gradient(135deg, #4CAF50, #388E3C);
+			border: none;
+			border-radius: 8px;
+			color: white;
+			font-size: 18px;
+			font-weight: bold;
+			padding: 12px 20px;
+			margin: 10px 5px;
+			cursor: pointer;
+			width: 45%;
+			transition: background 0.3s, transform 0.2s;
+		}
+		button:hover {
+			background: linear-gradient(135deg, #45a049, #2e7d32);
+			transform: scale(1.05);
+		}
+		#risultato {
+			font-size: 20px;
+			font-weight: bold;
+			color: #0047ab;
+			margin-top: 20px;
+		}
+		.footer {
+			position: fixed;
+			bottom: 20px;
+			background-color: rgba(0, 0, 0, 0.7);
+			padding: 0px 25px 0px 25px;
+			border-radius: 20px;
+		}
+		.footer a {
+			color: #ffeb3b;
+			text-decoration: none;
+			font-weight: bold;
+		}
+		.footer p {
+			color: white;
+			text-decoration: none;
+			text-align: center;
+			font-weight: bold;
+		}
+		.footer a:hover {
+			text-decoration: underline;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Cifratura RC4</h1>
+		<p>Inserisci qui la tua frase:</p>
+		<input type="text" id="frase" placeholder="Testo da cifrare/decifrare">
+		<p>Inserisci la chiave di codifica:</p>
+		<input type="text" id="chiave" placeholder="Chiave di codifica">
+		<button onclick="cifra()">Cifra</button>
+		<button onclick="decifra()">Decifra</button>
+		<p>Risultato:</p>
+		<span id="risultato"></span>
+	</div>
+	<div class="footer">
+        <p>Approfondisci:<br>
+			IT: <a href="https://it.wikipedia.org/wiki/RC4" target="_blank">RC4</a>
+			/ EN: <a href="https://en.wikipedia.org/wiki/RC4" target="_blank">RC4</a>
+		</p>
+	</div>
+
+	<script>
+		function rc4(text, key) {
+			let s = Array.from({ length: 256 }, (_, i) => i);
+			let j = 0;
+			let result = '';
+
+			// Key-scheduling algorithm (KSA)
+			for (let i = 0; i < 256; i++) {
+				j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;
+				[s[i], s[j]] = [s[j], s[i]];
+			}
+
+			// Pseudo-random generation algorithm (PRGA)
+			let i = 0;
+			j = 0;
+			for (let char of text) {
+				i = (i + 1) % 256;
+				j = (j + s[i]) % 256;
+				[s[i], s[j]] = [s[j], s[i]];
+				let k = s[(s[i] + s[j]) % 256];
+				result += String.fromCharCode(char.charCodeAt(0) ^ k);
+			}
+
+			return result;
+		}
+
+		function cifra() {
+			let testo = document.getElementById("frase").value;
+			let chiave = document.getElementById("chiave").value;
+			if (!chiave) {
+				document.getElementById("risultato").innerText = "Inserisci una chiave valida.";
+				return;
+			}
+			let cifrato = rc4(testo, chiave);
+			document.getElementById("risultato").innerText = btoa(cifrato); // Codifica in Base64 per leggibilità
+		}
+
+		function decifra() {
+			let testo = atob(document.getElementById("frase").value); // Decodifica da Base64
+			let chiave = document.getElementById("chiave").value;
+			if (!chiave) {
+				document.getElementById("risultato").innerText = "Inserisci una chiave valida.";
+				return;
+			}
+			let decifrato = rc4(testo, chiave);
+			document.getElementById("risultato").innerText = decifrato;
+		}
+	</script>
+</body>
+</html>
